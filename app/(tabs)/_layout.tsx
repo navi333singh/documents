@@ -2,6 +2,7 @@ import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
 import { Pressable } from 'react-native';
+import { Icon } from 'react-native-paper';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -30,7 +31,11 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Documents',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: ({ color }) => <Icon
+            source="file-document-outline"
+            color={color}
+            size={30}
+          />,
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>

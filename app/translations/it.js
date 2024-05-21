@@ -6,4 +6,7 @@ export default {
     TS: 'Tessera Sanitaria',
     PAT: 'Patente',
     PP: 'Passaporto',
+    UPLOAD_TITLE: 'Aggiungi il tuo documento',
+    UPLOAD_SUBTITLE: 'inserisci tutti i dati richiesti',
+    HOME_TITLE: 'Bentornato'
 };

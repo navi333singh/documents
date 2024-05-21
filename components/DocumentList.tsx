@@ -1,19 +1,31 @@
-import { Link } from 'expo-router';
-import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import { Avatar, Card, Button, IconButton } from 'react-native-paper';
+import { Card, IconButton } from 'react-native-paper';
 import { Text, View } from '@/components/Themed';
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet } from 'react-native';
+import namespace from '@/app/translations/namespace.js'
+
 export function DocumentList({ children }: { children: React.ReactNode }
 ) {
     return (
-
-        <Card style={styles.list} mode='contained'>
-
-            {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
-            {children}
-
-        </Card>
+        <>
+            <Card style={styles.list} mode='contained'>
+                {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
+                {children}
+            </Card>
+            <View style={styles.upload}>
+                <Card.Content style={styles.iconCard}>
+                    <IconButton
+                        icon="file-upload-outline"
+                        iconColor={'#6E47D5'}
+                        mode='contained'
+                        size={40}
+                        onPress={() => console.log('Pressed')}
+                    />
+                    <Text style={{ fontSize: 18, fontFamily: 'ManropeBold' }}>{namespace.t('UPLOAD_TITLE')}</Text>
+                    <Text style={{ fontSize: 14, color: '#A0A0A0', fontFamily: 'ManropeRegular' }}>{namespace.t('UPLOAD_SUBTITLE')}</Text>
+                </Card.Content>
+            </View>
+        </>
     );
 }
 
@@ -24,6 +36,18 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         backgroundColor: '#ffffff',
         paddingVertical: 4,
+    },
+    upload: {
+        marginTop: 10,
+        height: 'auto',
+        marginHorizontal: 15,
+        borderRadius: 15,
+        backgroundColor: '#ffffff',
+        paddingVertical: 4,
+    },
+    iconCard: {
+        margin: 15,
+        alignItems: 'center',
     },
     TextName: {
         textAlign: 'left',

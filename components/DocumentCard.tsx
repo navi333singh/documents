@@ -14,6 +14,7 @@ export function DocumentCard(
             <Card style={styles.card} mode='contained' >
                 <Card.Title
                     title={props.title || "deafult"}
+                    titleStyle={styles.title}
                     subtitle={props.subtitle || "deafult"}
                     subtitleStyle={styles.subtitle}
                     left={() => <Avatar.Image style={styles.icon} size={48} source={images(props.imgSource)} />}
@@ -26,7 +27,7 @@ export function DocumentCard(
 
 const styles = StyleSheet.create({
     card: {
-        margin: 5,
+        margin: 4,
         backgroundColor: '#ffffff',
         borderRadius: 30,
     },
@@ -34,7 +35,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
     },
     subtitle: {
+        fontFamily: 'ManropeRegular',
         color: '#737d88',
     },
+    title: {
+        fontFamily: 'ManropeBold',
 
+    },
 });

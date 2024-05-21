@@ -9,7 +9,7 @@ export default function ModalScreen() {
     <View style={styles.container}>
       <Image
         style={styles.logo}
-        source={require('../assets/images/fronte.png')}
+        source={require('../assets/images/model/ID_FRONTE.png')}
       />
       <Image
         style={styles.logo}

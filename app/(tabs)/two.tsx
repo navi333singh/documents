@@ -1,42 +1,83 @@
-import { useState } from 'react';
-import { Button, Image, View, StyleSheet } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import { CameraView, useCameraPermissions} from 'expo-camera';
+import {useRef, useState} from 'react';
+import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function ImagePickerExample() {
-  const [image, setImage] = useState(null);
+export default function App() {
+  const [facing, setFacing] = useState('back');
+  const [permission, requestPermission] = useCameraPermissions();
+  let cameraRef = useRef();
+  const [photo, setPhoto] = useState();
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
+  if (!permission) {
+    // Camera permissions are still loading.
+    return <View />;
+  }
+
+  if (!permission.granted) {
+    // Camera permissions are not granted yet.
+    return (
+        <View style={styles.container}>
+          <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
+          <Button onPress={requestPermission} title="grant permission" />
+        </View>
+    );
+  }
+
+  function toggleCameraFacing() {
+    setFacing(current => (current === 'back' ? 'front' : 'back'));
+  }
+
+  let takePic = async () => {
+    let options = {
       quality: 1,
-    });
+      base64: true,
+      exif: false
+    };
 
-    console.log(result);
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
+    let newPhoto = await cameraRef.current.takePictureAsync(options);
+    setPhoto(newPhoto);
+    console.log(newPhoto);
   };
 
   return (
-    <View style={styles.container}>
-      <Button title="Pick an image from camera roll" onPress={pickImage} />
-      {image && <Image source={{ uri: image }} style={styles.image} />}
-    </View>
+      <View style={styles.container}>
+        <CameraView style={styles.camera} facing={'back'} ref={cameraRef}>
+            <View style={styles.card} >
+            </View>
+          <TouchableOpacity  onPress={takePic}>
+            <Text style={styles.text}>Flip Camera </Text>
+          </TouchableOpacity>
+        </CameraView>
+      </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    justifyContent: 'center',
   },
-  image: {
-    width: 200,
-    height: 200,
+  camera: {
+    flex: 1,
+  },
+
+  card: {
+    borderStyle: "solid",
+    borderWidth: 2,
+    margin: 12,
+    height: 240,
+    width: 360,
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft:'auto',
+    marginRight:'auto',
+    marginTop: 300,
+    borderColor: 'white',
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
   },
 });
