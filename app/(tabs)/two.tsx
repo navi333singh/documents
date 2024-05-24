@@ -1,83 +1,58 @@
-import { CameraView, useCameraPermissions} from 'expo-camera';
-import {useRef, useState} from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useState } from 'react';
+import { Button, Image, View, StyleSheet, Text } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { getTextFromImage } from './GoogleVision';
+import * as SecureStore from 'expo-secure-store';
 
-export default function App() {
-  const [facing, setFacing] = useState('back');
-  const [permission, requestPermission] = useCameraPermissions();
-  let cameraRef = useRef();
-  const [photo, setPhoto] = useState();
+export default function ImagePickerExample() {
+  const [image, setImage] = useState(null);
+  const [testo, setTesto] = useState("loading");
 
-  if (!permission) {
-    // Camera permissions are still loading.
-    return <View />;
+  function save(key: any, value: any) {
+    SecureStore.setItem(key, value);
+    console.log('saved');
+    const resp = SecureStore.getItem('ID');
+    console.log(resp);
   }
 
-  if (!permission.granted) {
-    // Camera permissions are not granted yet.
-    return (
-        <View style={styles.container}>
-          <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
-          <Button onPress={requestPermission} title="grant permission" />
-        </View>
-    );
-  }
-
-  function toggleCameraFacing() {
-    setFacing(current => (current === 'back' ? 'front' : 'back'));
-  }
-
-  let takePic = async () => {
-    let options = {
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
       quality: 1,
       base64: true,
-      exif: false
-    };
+    });
 
-    let newPhoto = await cameraRef.current.takePictureAsync(options);
-    setPhoto(newPhoto);
-    console.log(newPhoto);
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      getTextFromImage(result.assets[0].base64, result.assets[0].mimeType).then(res => {
+        console.log(JSON.stringify(res));
+        save('ID', JSON.stringify(res));
+        setTesto("DONE");
+      });
+    }
   };
 
   return (
-      <View style={styles.container}>
-        <CameraView style={styles.camera} facing={'back'} ref={cameraRef}>
-            <View style={styles.card} >
-            </View>
-          <TouchableOpacity  onPress={takePic}>
-            <Text style={styles.text}>Flip Camera </Text>
-          </TouchableOpacity>
-        </CameraView>
-      </View>
+    <View style={styles.container}>
+      <Button title="Pick an image from camera roll" onPress={pickImage} />
+      {image && <Image source={{ uri: image }} style={styles.image} />}
+      <Text>{testo}</Text>
+
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
-  camera: {
-    flex: 1,
-  },
-
-  card: {
-    borderStyle: "solid",
-    borderWidth: 2,
-    margin: 12,
-    height: 240,
-    width: 360,
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft:'auto',
-    marginRight:'auto',
-    marginTop: 300,
-    borderColor: 'white',
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
+  image: {
+    width: 200,
+    height: 200,
   },
 });

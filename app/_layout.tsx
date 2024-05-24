@@ -24,6 +24,8 @@ export default function RootLayout() {
   const [loaded, error] = useFonts({
     ManropeBold: require('../assets/fonts/Manrope-Bold.ttf'),
     ManropeRegular: require('../assets/fonts/Manrope-Regular.ttf'),
+    ManropeSemiBold: require('../assets/fonts/Manrope-SemiBold.ttf'),
+    TiliBold: require('../assets/fonts/TitilliumWeb-Bold.ttf'),
     ...FontAwesome.font,
   });
 
@@ -52,7 +54,7 @@ function RootLayoutNav() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="modal" options={{ presentation: 'modal', headerShown: false }} />
       </Stack>
     </ThemeProvider>
   );

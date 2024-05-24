@@ -6,18 +6,17 @@ import { Avatar, Card, Button, IconButton } from 'react-native-paper';
 import { images } from '../constants/Image';
 
 export function DocumentCard(
-    props: { title?: string; subtitle?: string; imgSource: string; }
+    props: { title?: string; subtitle?: string; id: string; }
 ) {
-
     return (
-        <Link href="/modal" asChild>
+        <Link href={{ pathname: "/modal", params: { type: props.id } }} asChild>
             <Card style={styles.card} mode='contained' >
                 <Card.Title
                     title={props.title || "deafult"}
                     titleStyle={styles.title}
                     subtitle={props.subtitle || "deafult"}
                     subtitleStyle={styles.subtitle}
-                    left={() => <Avatar.Image style={styles.icon} size={48} source={images(props.imgSource)} />}
+                    left={() => <Avatar.Image style={styles.icon} size={48} source={images(props.id)} />}
                     right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => { }} />}
                 />
             </Card>

@@ -31,10 +31,10 @@ export default function HomeScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={styles.header}>{namespace.t('DOCUMENTS')}</Text>
         <DocumentList>
-          <DocumentCard title={namespace.t('ID')} subtitle='18/04/2024' imgSource='ID' />
-          <DocumentCard title={namespace.t('TS')} subtitle='18/04/2024' imgSource='TS' />
-          <DocumentCard title={namespace.t('PAT')} subtitle='18/04/2024' imgSource='Patente' />
-          <DocumentCard title={namespace.t('PP')} subtitle='18/04/2024' imgSource='passaporto' />
+          <DocumentCard title={namespace.t('ID')} subtitle='18/04/2024' id='ID' />
+          <DocumentCard title={namespace.t('TS')} subtitle='18/04/2024' id='TS' />
+          <DocumentCard title={namespace.t('PAT')} subtitle='18/04/2024' id='Patente' />
+          <DocumentCard title={namespace.t('PP')} subtitle='18/04/2024' id='passaporto' />
         </DocumentList>
       </ScrollView>
     </View >
