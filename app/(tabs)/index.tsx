@@ -4,7 +4,7 @@ import { Searchbar, Avatar, Card, IconButton } from 'react-native-paper';
 import { Text, View } from '@/components/Themed';
 import { DocumentCard } from '@/components/DocumentCard';
 import { DocumentList } from '@/components/DocumentList';
-import namespace from '@/app/translations/namespace.js'
+import namespace from '@/app/translations/namespace.js';
 
 export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -33,7 +33,7 @@ export default function HomeScreen() {
         <DocumentList>
           <DocumentCard title={namespace.t('ID')} subtitle='18/04/2024' id='ID' />
           <DocumentCard title={namespace.t('TS')} subtitle='18/04/2024' id='TS' />
-          <DocumentCard title={namespace.t('PAT')} subtitle='18/04/2024' id='Patente' />
+          <DocumentCard title={namespace.t('PAT')} subtitle='18/04/2024' id='PATENTE' />
           <DocumentCard title={namespace.t('PP')} subtitle='18/04/2024' id='passaporto' />
         </DocumentList>
       </ScrollView>

@@ -5,7 +5,7 @@ export const images = (img: string) => {
             return require('../assets/images/logoCard/id.png');
         case "TS":
             return require('../assets/images/logoCard/TS.png');
-        case "Patente":
+        case "PATENTE":
             return require('../assets/images/logoCard/patente_logo.png');
         case "passaporto":
             return require('../assets/images/logoCard/passaporto.png');

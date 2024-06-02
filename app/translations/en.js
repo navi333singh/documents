@@ -10,4 +10,5 @@ export default {
     UPLOAD_SUBTITLE: 'inserisci tutti i dati richiesti',
     HOME_TITLE: 'Bentornato',
     ROTATE: 'Gira',
+    COPY: 'Copied!'
 };

@@ -10,4 +10,12 @@ export default {
     UPLOAD_SUBTITLE: 'inserisci tutti i dati richiesti',
     HOME_TITLE: 'Bentornato',
     ROTATE: 'Gira',
+    NAME: 'nome',
+    SURNAME: 'cognome',
+    PLACE_AND_DATE: 'Luogo e data di nascita',
+    CARD_NUMBER: 'Numero Carta',
+    DATA_SCADENZA: 'Scadenza',
+    DATA_EMISSIONE: 'Emissione',
+    CF: 'Codice Fiscale',
+    COPY: 'Copiato!'
 };

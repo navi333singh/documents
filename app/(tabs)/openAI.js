@@ -9,7 +9,8 @@ export const getTextFromImage = async (image, type) => {
             {
                 role: "user",
                 content: [
-                    { type: "text", text: "retrive a only json array with the following params: card_number, municipality, nome, cognome, place_of_birth, date_of_birth, sex, height, nationality, issuing_date, expiry_date, right_bottom_code" },
+                    //{ type: "text", text: "retrive a only json array with the following params: card_number, municipality, nome, cognome, place_of_birth, date_of_birth, sex, height, nationality, issuing_date, expiry_date, right_bottom_code" },
+                    { type: "text", text: "retrive a only json array with the following params: FISCAL_CODE, ATTO_DI_NASCITA, ADDRESS, MRZ_CODE" },
                     {
                         type: "image_url",
                         image_url: {
