@@ -17,5 +17,11 @@ export default {
     DATA_SCADENZA: 'Scadenza',
     DATA_EMISSIONE: 'Emissione',
     CF: 'Codice Fiscale',
-    COPY: 'Copiato!'
+    COPY: 'Copiato!',
+    SECOND_STEP_TITLE: 'Scansiona il tuo Documento',
+    SECOND_STEP_SUBTITLE: 'Puoi scansionare un documento o scegliere una foto dalla tua galleria',
+    SECOND_STEP_BUTTON_1: 'Scansiona documento',
+    SECOND_STEP_BUTTON_2: 'Scegli foto',
+    SECOND_STEP_BUTTON_3: 'Inserisci manualmente',
+    NEXT: 'Avanti',
 };

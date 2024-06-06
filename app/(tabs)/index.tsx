@@ -5,7 +5,7 @@ import { Text, View } from '@/components/Themed';
 import { DocumentCard } from '@/components/DocumentCard';
 import { DocumentList } from '@/components/DocumentList';
 import namespace from '@/app/translations/namespace.js';
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   return (
@@ -25,7 +25,7 @@ export default function HomeScreen() {
           titleStyle={{ fontFamily: 'ManropeBold', fontSize: 16, }}
           subtitle={"Navdeep Singh"}
           subtitleStyle={{ fontFamily: 'ManropeBold', fontSize: 19, }}
-          left={(props) => <Avatar.Icon {...props} size={45} style={{ borderRadius: 13 }} icon="account-circle-outline" />}
+          left={(props) => <MaterialCommunityIcons name="account" size={44} color="#6E47D5" />}
         />
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -34,7 +34,7 @@ export default function HomeScreen() {
           <DocumentCard title={namespace.t('ID')} subtitle='18/04/2024' id='ID' />
           <DocumentCard title={namespace.t('TS')} subtitle='18/04/2024' id='TS' />
           <DocumentCard title={namespace.t('PAT')} subtitle='18/04/2024' id='PATENTE' />
-          <DocumentCard title={namespace.t('PP')} subtitle='18/04/2024' id='passaporto' />
+          <DocumentCard title={namespace.t('PP')} subtitle='18/04/2024' id='PP' />
         </DocumentList>
       </ScrollView>
     </View >
