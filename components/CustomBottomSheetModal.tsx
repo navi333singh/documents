@@ -8,6 +8,7 @@ import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
 import * as SecureStore from 'expo-secure-store';
 import TextRecognition from '@react-native-ml-kit/text-recognition';
+import DocumentScanner from 'react-native-document-scanner-plugin';
 export type Ref = BottomSheetModal;
 
 const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
@@ -16,6 +17,7 @@ const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
     const [step, setStep] = useState(1);
     const snapeToIndex = (index: number) => ref?.current?.snapToIndex(index);
     const [selectDocument, setSelectDocument] = useState();
+    const [scannedImage, setScannedImage] = useState();
 
     const { dismiss } = useBottomSheetModal();
     const renderBackdrop = useCallback(
@@ -105,6 +107,8 @@ const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
         );
     }
 
+
+
     const save = (key: any, value: any) => {
         SecureStore.setItem(key, value);
         console.log('saved');
@@ -114,33 +118,37 @@ const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
+        // let results = await ImagePicker.launchImageLibraryAsync({
+        //     mediaTypes: ImagePicker.MediaTypeOptions.All,
+        //     allowsEditing: true,
+        //     aspect: [4, 3],
+        //     quality: 1,
+        // });
+        const { scannedImages } = await DocumentScanner.scanDocument({
+            croppedImageQuality: 90,
+            maxNumDocuments: 2
         });
-
-        console.log(result);
-
-        if (!result.canceled) {
-            setImage(result.assets[0].uri);
-            console.log(image);
-            const result: any = await TextRecognition.recognize(result.assets[0].uri);
-            console.log('Recognized text:', result.text);
-
-            for (let block of result.blocks) {
-                console.log('Block text:', block.text);
-                console.log('Block frame:', block.frame);
-
-                for (let line of block.lines) {
-                    console.log('Line text:', line.text);
-                    console.log('Line frame:', line.frame);
-                }
+        // get back an array with scanned image file paths
 
 
+
+        setImage(scannedImages[0]);
+        console.log(image);
+        const result: any = await TextRecognition.recognize(scannedImages[0]);
+        console.log('Recognized text:', result.text);
+
+        for (let block of result.blocks) {
+            console.log('Block text:', block.text);
+            console.log('Block frame:', block.frame);
+
+            for (let line of block.lines) {
+                console.log('Line text:', line.text);
+                console.log('Line frame:', line.frame);
             }
+
+
         }
+
     };
 
     return (

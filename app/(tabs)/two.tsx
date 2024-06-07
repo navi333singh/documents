@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { Button, Image, View, StyleSheet, Text } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePickers from 'expo-image-picker';
 import { getTextFromImage } from './openAI';
 import DocumentScanner from 'react-native-document-scanner-plugin';
 import * as SecureStore from 'expo-secure-store';
-
+import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
+import ImagePicker from 'react-native-image-crop-picker';
 export default function ImagePickerExample() {
   const [image, setImage] = useState();
   const [testo, setTesto] = useState("loading");
   const [scannedImage, setScannedImage] = useState();
+
 
   const scanDocument = async () => {
     // start the document scanner
@@ -34,16 +36,24 @@ export default function ImagePickerExample() {
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
-    let result: any = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
+    let result = await ImagePickers.launchImageLibraryAsync({
+      mediaTypes: ImagePickers.MediaTypeOptions.All,
+      presentationStyle: ImagePickers.UIImagePickerPresentationStyle.CURRENT_CONTEXT,
+      allowsMultipleSelection: true,
       quality: 1,
-      base64: true,
     });
+
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
-      scanDocument();
+      ImagePicker.openCropper({
+        path: result.assets[0].uri,
+        width: 300,
+        height: 400
+      }).then(image => {
+        console.log(image);
+      });
+
       //   getTextFromImage(result.assets[0].base64, result.assets[0].mimeType).then(res => {
       //     console.log(JSON.stringify(res));
       //     save('ID', JSON.stringify(res));
@@ -54,10 +64,9 @@ export default function ImagePickerExample() {
 
   return (
     <View style={styles.container}>
-      <Button title="Pick an image from camera roll" onPress={scanDocument} />
+      <Button title="Pick an image from camera roll" onPress={pickImage} />
       {<Image source={{ uri: scannedImage }} style={styles.image} />}
       <Text>{testo}</Text>
-
     </View>
   );
 }
