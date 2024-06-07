@@ -7,6 +7,7 @@ import Colors from '@/constants/Colors';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
 import * as SecureStore from 'expo-secure-store';
+import TextRecognition from '@react-native-ml-kit/text-recognition';
 export type Ref = BottomSheetModal;
 
 const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
@@ -134,16 +135,25 @@ const pickImage = async (selectDocument: any) => {
     });
 
     if (!result.canceled) {
-        setImage(result.assets[0].uri);
-        getTextFromImage(result.assets[0].base64, result.assets[0].mimeType).then(res => {
-            console.log(JSON.stringify(res));
-            save('ID', JSON.stringify(res));
-            setTesto("DONE");
-        });
+
+        const result = await TextRecognition.recognize(result.assets[0].uri);
+        console.log('Recognized text:', result.text);
+        
+        for (let block of result.blocks) {
+          console.log('Block text:', block.text);
+          console.log('Block frame:', block.frame);
+        
+          for (let line of block.lines) {
+            console.log('Line text:', line.text);
+            console.log('Line frame:', line.frame);
+          }
+
+        
     }
 };
 
 const styles = StyleSheet.create({
+
     contentContainer: {
         flex: 1,
     },

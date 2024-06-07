@@ -8,6 +8,6 @@ const namespace = new I18n({
     it: it,
 });
 
-namespace.locale = getLocales()[0].languageCode;
+namespace.locale =  'it';
 
 export default namespace;
