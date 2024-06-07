@@ -18,6 +18,7 @@
     "@expo/vector-icons": "^14.0.0",
     "@gorhom/bottom-sheet": "^4.6.3",
     "@kichiyaki/react-native-barcode-generator": "^0.6.7",
+    "@react-native-community/image-editor": "^4.2.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-ml-kit/text-recognition": "^1.5.1",
     "@react-native-picker/picker": "2.7.5",

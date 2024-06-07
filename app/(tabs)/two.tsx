@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { Button, Image, View, StyleSheet, Text } from 'react-native';
-import * as ImagePickers from 'expo-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 import { getTextFromImage } from './openAI';
 import DocumentScanner from 'react-native-document-scanner-plugin';
 import * as SecureStore from 'expo-secure-store';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
-import ImagePicker from 'react-native-image-crop-picker';
+import ImageEditor from '@react-native-community/image-editor';
 export default function ImagePickerExample() {
   const [image, setImage] = useState();
   const [testo, setTesto] = useState("loading");
   const [scannedImage, setScannedImage] = useState();
-
 
   const scanDocument = async () => {
     // start the document scanner
@@ -36,24 +35,27 @@ export default function ImagePickerExample() {
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
-    let result = await ImagePickers.launchImageLibraryAsync({
-      mediaTypes: ImagePickers.MediaTypeOptions.All,
-      presentationStyle: ImagePickers.UIImagePickerPresentationStyle.CURRENT_CONTEXT,
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      presentationStyle: ImagePicker.UIImagePickerPresentationStyle.CURRENT_CONTEXT,
+      allowsEditing: true,
       allowsMultipleSelection: true,
       quality: 1,
     });
 
-
     if (!result.canceled) {
       setImage(result.assets[0].uri);
-      ImagePicker.openCropper({
-        path: result.assets[0].uri,
-        width: 300,
-        height: 400
-      }).then(image => {
-        console.log(image);
-      });
+      const displaySize = {
+        width: 100,
+        height: 100
 
+      }
+      const cropData: any = {
+        displaySize,
+      };
+      ImageEditor.cropImage(result.assets[0].uri, cropData).then((result) => {
+        console.log('Cropped image uri:', result.uri);
+      });
       //   getTextFromImage(result.assets[0].base64, result.assets[0].mimeType).then(res => {
       //     console.log(JSON.stringify(res));
       //     save('ID', JSON.stringify(res));
