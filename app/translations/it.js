@@ -20,8 +20,13 @@ export default {
     COPY: 'Copiato!',
     SECOND_STEP_TITLE: 'Scansiona il tuo Documento',
     SECOND_STEP_SUBTITLE: 'Puoi scansionare un documento o scegliere una foto dalla tua galleria',
+    TAKE_STEP_SUBTITLE: 'Scansionare il fronte e il retro del documento',
     SECOND_STEP_BUTTON_1: 'Scansiona documento',
     SECOND_STEP_BUTTON_2: 'Scegli foto',
     SECOND_STEP_BUTTON_3: 'Inserisci manualmente',
     NEXT: 'Avanti',
+    PICK_IMAGE_TEXT: 'Seleziona il fronte e il retro del documento',
+    PICK_IMAGE_TEXT_BUTTON_FRONTE: 'Scegli fronte',
+    PICK_IMAGE_TEXT_BUTTON_RETRO: 'Scegli retro',
+    PICK_IMAGE_TEXT_BUTTON_CONFIRM: 'Aggiungi',
 };

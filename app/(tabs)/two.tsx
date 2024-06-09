@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { Button, Image, View, StyleSheet, Text } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import { getTextFromImage } from './openAI';
 import DocumentScanner from 'react-native-document-scanner-plugin';
 import * as SecureStore from 'expo-secure-store';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
-import ImageEditor from '@react-native-community/image-editor';
 export default function ImagePickerExample() {
   const [image, setImage] = useState();
   const [testo, setTesto] = useState("loading");
@@ -33,35 +32,17 @@ export default function ImagePickerExample() {
     console.log(resp);
   }
 
-  const pickImage = async () => {
+  const pickImage = () => {
     // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      presentationStyle: ImagePicker.UIImagePickerPresentationStyle.CURRENT_CONTEXT,
-      allowsEditing: true,
-      allowsMultipleSelection: true,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      const displaySize = {
-        width: 100,
-        height: 100
-
-      }
-      const cropData: any = {
-        displaySize,
-      };
-      ImageEditor.cropImage(result.assets[0].uri, cropData).then((result) => {
-        console.log('Cropped image uri:', result.uri);
-      });
-      //   getTextFromImage(result.assets[0].base64, result.assets[0].mimeType).then(res => {
-      //     console.log(JSON.stringify(res));
-      //     save('ID', JSON.stringify(res));
-      //     setTesto("DONE");
-      //   });
-    }
+    ImagePicker.openPicker({
+      width: 700,
+      height: 450,
+      cropping: true,
+      freeStyleCropEnabled: true,
+      loadingLabelText: 'Loading...'
+    }).then(images => {
+      setScannedImage(images.path);
+    })
   };
 
   return (
