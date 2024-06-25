@@ -38,33 +38,17 @@ export default function ModalScreen() {
     setVisible(false);
   };
 
-  let cardInfoID = {
-    numeroCarta: data.card_number,
-    comune: data.municipality,
-    cognome: data.cognome,
-    nome: data.nome,
-    luogoEdata: data.place_of_birth + "  " + data.date_of_birth,
-    sesso: data.sex,
-    statura: data.height,
-    cittadinanza: data.nationality,
-    emissione: data.issuing_date,
-    scadenza: data.expiry_date,
-    codiceCarta: data.right_bottom_code,
-    codiceFiscale: data.FISCAL_CODE,
-    indirizzo: data.ADDRESS,
-    estremi: data.ATTO_DI_NASCITA,
-    mrz: data.MRZ_CODE,
-  };
+
 
   switch (params.type) {
     case 'ID':
-      return renderIdCard(cardInfoID);
+      return renderIdCard(data);
     case 'TS':
-      return renderTScard(cardInfoID);
+      return renderTScard(data);
     case 'PATENTE':
-      return renderPATENTECard(cardInfoID);
+      return renderPATENTECard(data);
     default:
-      return renderIdCard(cardInfoID);
+      return renderIdCard(data);
   }
 
   function renderIdCard(cardInfo: any) {
@@ -105,7 +89,7 @@ export default function ModalScreen() {
 
             <Barcode
               format="CODE39"
-              value={cardInfo.codiceFiscale}
+              value={cardInfo.codiceFiscale || '0000'}
               style={{ position: 'absolute', top: 114, left: 40 }}
               textStyle={{ color: '#000' }}
               height={40}
