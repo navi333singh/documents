@@ -15,7 +15,6 @@ export default function ImagePickerExample() {
     const { scannedImages } = await DocumentScanner.scanDocument({
       croppedImageQuality: 90,
       maxNumDocuments: 2,
-
     })
 
     // get back an array with scanned image file paths

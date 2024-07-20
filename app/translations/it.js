@@ -29,4 +29,6 @@ export default {
     PICK_IMAGE_TEXT_BUTTON_FRONTE: 'Scegli fronte',
     PICK_IMAGE_TEXT_BUTTON_RETRO: 'Scegli retro',
     PICK_IMAGE_TEXT_BUTTON_CONFIRM: 'Aggiungi',
+    NOT_AVAILABLE: 'Documento non disponibile',
+    LINK_NOT_AVAILBLE: ' '
 };

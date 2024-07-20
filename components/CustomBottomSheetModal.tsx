@@ -9,12 +9,11 @@ import * as SecureStore from 'expo-secure-store';
 import TextRecognition from '@react-native-ml-kit/text-recognition';
 import DocumentScanner, { ResponseType, ScanDocumentResponseStatus } from 'react-native-document-scanner-plugin';
 import ImagePicker from 'react-native-image-crop-picker';
-import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
+import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import { BlurView } from 'expo-blur';
 import { SQLiteProvider, useSQLiteContext, type SQLiteDatabase } from 'expo-sqlite';
 
 export type Ref = BottomSheetModal;
-
 const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
     const [fronteImage, setfronteImage] = useState(null);
     const [retroImage, setretroImage] = useState(null);
@@ -37,8 +36,6 @@ const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
         ),
         []
     );
-
-
     const selectStep = () => {
         switch (step) {
             case 1:
@@ -63,10 +60,6 @@ const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
         ),
         []
     );
-
-
-
-
 
     const cardList = (nextStep: any) => {
         return (
@@ -139,7 +132,7 @@ const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
                                 height: 161,
                             }} /> : <Text style={[styles.text, { color: Colors['light'].tint }]}>{namespace.t('PICK_IMAGE_TEXT_BUTTON_FRONTE')}</Text>}
                         </BlurView>
-                    </TouchableOpacity>
+                    </TouchableOpacity >
 
                     <TouchableOpacity style={[styles.cardButton, { alignSelf: 'center' }]} onPress={() => pickImage(2)}>
                         <BlurView intensity={20} tint="dark" style={styles.blurContainer}>
@@ -153,7 +146,7 @@ const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
                     <TouchableOpacity style={styles.button} onPress={() => { save() }}>
                         <Text style={[styles.text, { color: 'white' }]}>{namespace.t('PICK_IMAGE_TEXT_BUTTON_CONFIRM')}</Text>
                     </TouchableOpacity>
-                </View>
+                </View >
             </View >
         );
     }
@@ -407,8 +400,8 @@ const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
             }
         }
         console.log(JSON.stringify(cardInfoID));
-        const resp = await SecureStore.setItemAsync(selectDocument, JSON.stringify(cardInfoID));
-        console.log(selectDocument);
+        console.log(selectDocument + '-' + props.user)
+        await SecureStore.setItemAsync(selectDocument + '-' + props.user, JSON.stringify(cardInfoID));
 
     }
 
@@ -441,6 +434,7 @@ const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
                 enableHandlePanningGesture={false}
             // handleComponent={renderHandleComponent}
             >
+
                 {selectStep()}
             </BottomSheetModal>
         </View >
@@ -462,7 +456,8 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     bottomSheetContainer: {
-        borderRadius: 20,
+        borderRadius: 30,
+        backgroundColor: '#F6F5F5',
     },
     titleContent: {
         paddingHorizontal: 20,

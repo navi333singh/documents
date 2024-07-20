@@ -11,13 +11,14 @@ import { useRef, useEffect, useState } from 'react';
 import namespace from '@/app/translations/namespace.js'
 import * as Clipboard from 'expo-clipboard';
 import { Button, Snackbar } from 'react-native-paper';
+import React from 'react';
 
 export default function ModalScreen() {
   const [data, setData] = useState(Object);
 
   useEffect(() => {
     const fetchData = () => {
-      const resp = SecureStore.getItem(params.type || 'ID') || '{}';
+      const resp = SecureStore.getItem(params.type + '-' + params.user || 'ID' + '-' + params.user) || '{}';
       return JSON.parse(resp);
     }
     let getData = fetchData();
@@ -28,7 +29,7 @@ export default function ModalScreen() {
     setData(upperCased);
   }, [setData]);
 
-  const params = useLocalSearchParams<{ type?: string, }>();
+  const params = useLocalSearchParams<{ type?: string, user: string }>();
   let flipCard = useRef(GestureFlipView);
   const [visible, setVisible] = useState(false);
   const [visibleWait, setVisibleWait] = useState(true);
@@ -37,8 +38,6 @@ export default function ModalScreen() {
     setVisibleWait(true);
     setVisible(false);
   };
-
-
 
   switch (params.type) {
     case 'ID':

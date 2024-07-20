@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { useColorScheme } from '@/components/useColorScheme';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import React from 'react';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -59,6 +60,7 @@ function RootLayoutNav() {
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="modal" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="search" options={{ presentation: 'transparentModal', headerShown: false, animation: 'fade' }} />
           </Stack>
         </ThemeProvider>
       </BottomSheetModalProvider>

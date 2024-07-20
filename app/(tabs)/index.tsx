@@ -1,43 +1,36 @@
-import { StyleSheet, ScrollView } from 'react-native';
-import { useState } from 'react';
-import { Searchbar, Avatar, Card, IconButton } from 'react-native-paper';
+import { StyleSheet, SafeAreaView, Animated, ScrollView } from 'react-native';
+import { useRef } from 'react';
+import { Link } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import { DocumentCard } from '@/components/DocumentCard';
 import { DocumentList } from '@/components/DocumentList';
 import namespace from '@/app/translations/namespace.js';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { SearchBar } from 'react-native-elements';
+import React from 'react';
 export default function HomeScreen() {
-  const [searchQuery, setSearchQuery] = useState('');
-  return (
+  const animState = useRef(new Animated.Value(0)).current;
 
-    <View style={styles.container}>
-      {/* <View style={styles.searchbar}>
-            <Searchbar
-              placeholder={namespace.t('SEARCHBAR')}
-              onChangeText={setSearchQuery}
-              value={searchQuery}
-              theme={theme}
-            />
-          </View> */}
+  return (
+    <SafeAreaView style={styles.container}>
       <View style={styles.headerCard}>
-        <Card.Title
-          title={namespace.t('HOME_TITLE')}
-          titleStyle={{ fontFamily: 'ManropeBold', fontSize: 16, }}
-          subtitle={"Navdeep Singh"}
-          subtitleStyle={{ fontFamily: 'ManropeBold', fontSize: 19, }}
-          left={(props) => <MaterialCommunityIcons name="account" size={44} color="#6E47D5" />}
-        />
+        <Link href={{ pathname: "/search" }} asChild>
+          <SearchBar
+            platform='ios'
+            searchIcon={() => <Ionicons name="search" size={24} color="black" />}
+            placeholder={namespace.t('SEARCHBAR')}
+            placeholderTextColor='#15161a'
+            containerStyle={{ backgroundColor: '#f7f7f7', marginHorizontal: 10 }}
+            inputContainerStyle={{ maxHeight: 30, borderRadius: 15, backgroundColor: '#eeeff3' }}
+            disabled={true}
+          />
+        </Link>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={styles.header}>{namespace.t('DOCUMENTS')}</Text>
-        <DocumentList>
-          <DocumentCard title={namespace.t('ID')} subtitle='18/04/2024' id='ID' />
-          <DocumentCard title={namespace.t('TS')} subtitle='18/04/2024' id='TS' />
-          <DocumentCard title={namespace.t('PAT')} subtitle='18/04/2024' id='PATENTE' />
-          <DocumentCard title={namespace.t('PP')} subtitle='18/04/2024' id='PP' />
-        </DocumentList>
+        <DocumentList />
       </ScrollView>
-    </View >
+    </SafeAreaView>
   );
 }
 
@@ -48,14 +41,14 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 20,
-    paddingTop: 30,
+    paddingTop: 15,
     marginLeft: 17,
     fontFamily: 'ManropeBold',
   },
   headerCard: {
-    paddingTop: 60,
     borderRadius: 17,
     paddingBottom: 5,
+    backgroundColor: '#f7f7f7'
   },
   title: {
     marginTop: 60,
