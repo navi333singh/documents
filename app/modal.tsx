@@ -236,7 +236,7 @@ export default function ModalScreen() {
 
         <View style={styles.infoBox}>
 
-          <ScrollView style={styles.scrollbar} showsVerticalScrollIndicator={false}>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <TouchableOpacity onPress={() => copyToClipboard(cardInfo.nome)}>
               <Text style={{ fontSize: 16, opacity: 0.5, fontFamily: 'ManropeRegular' }} >
                 {namespace.t('NAME')}

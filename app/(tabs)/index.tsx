@@ -8,6 +8,7 @@ import namespace from '@/app/translations/namespace.js';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SearchBar } from 'react-native-elements';
 import React from 'react';
+import { SQLiteDatabase, SQLiteProvider } from 'expo-sqlite';
 export default function HomeScreen() {
   const animState = useRef(new Animated.Value(0)).current;
 
@@ -27,23 +28,44 @@ export default function HomeScreen() {
         </Link>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
+      <SQLiteProvider databaseName="test.db" onInit={migrateDbIfNeeded} >
+        <View style={styles.textContent}>
         <Text style={styles.header}>{namespace.t('DOCUMENTS')}</Text>
+        <Text style={styles.subTitle}>{namespace.t('ADD_PERSON')}</Text>
+        </View>
         <DocumentList />
+      </SQLiteProvider>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
+async function migrateDbIfNeeded(db: SQLiteDatabase) {
+  await db.execAsync(`
+  PRAGMA journal_mode = WAL;
+  CREATE TABLE IF NOT EXISTS documents_base64 ( key TEXT PRIMARY KEY NOT NULL, value TEXT);
+`);
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f7f7f7',
   },
+  textContent: {
+    paddingTop: 15,
+    marginHorizontal: 15,
+    justifyContent: 'space-between', 
+    flexDirection:"row", 
+    alignItems: "center",
+    backgroundColor: '#f7f7f7',
+  },
   header: {
     fontSize: 20,
-    paddingTop: 15,
-    marginLeft: 17,
     fontFamily: 'ManropeBold',
+  },
+  subTitle: {
+    fontSize: 12, 
+    fontFamily: 'ManropeBold', 
   },
   headerCard: {
     borderRadius: 17,

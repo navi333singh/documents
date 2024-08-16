@@ -4,6 +4,7 @@ import { Text, StyleSheet } from 'react-native';
 import { Avatar, Card, IconButton } from 'react-native-paper';
 import { images } from '../constants/Image';
 import { View } from './Themed';
+import { BlurView } from 'expo-blur';
 import namespace from '@/app/translations/namespace.js'
 
 export function DocumentCard(
@@ -27,16 +28,19 @@ export function DocumentCard(
             }
             {
                 props.firstFist && !props.disable ? (<Card style={styles.card} mode='contained' disabled={true}>
-                    <View style={{
-                        position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', zIndex: 1, opacity: 0.7, backgroundColor: '#E3E3E3', margin: 4,
+                    <BlurView style={{
+                        position: 'absolute',overflow: 'hidden', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', zIndex: 1,   
                         borderRadius: 10,
-                    }}>
+                    }} tint="systemChromeMaterial">
                         <Card.Content style={styles.iconCard}>
-                            <Text style={{ fontSize: 15, fontFamily: 'ManropeBold', marginBottom: 10, }}>{namespace.t('NOT_AVAILABLE')}</Text>
+                            <Text style={{ fontSize: 15, fontFamily: 'ManropeSemiBold', marginBottom: 10, color: "#374151", letterSpacing: 1}}>{props.title +' '+namespace.t('NOT_AVAILABLE')}</Text>
                         </Card.Content>
-                    </View>
-                    <Card.Title style={styles.notAvailable}
-                        title={""}
+                    </BlurView>
+                    <Card.Title style={styles.notAvailable} 
+                          title={props.title || "deafult"}
+                          titleStyle={styles.title}
+                          subtitle={props.subtitle || "deafult"}
+                          subtitleStyle={styles.subtitle}
                         left={() => <Avatar.Image style={styles.icon} size={48} source={images(props.id)} />}
                         right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => { }} />}
                     />
@@ -66,7 +70,6 @@ const styles = StyleSheet.create({
         margin: 4,
         backgroundColor: '#ffffff',
         borderRadius: 30,
-        opacity: 1
     },
     iconCard: {
         alignItems: 'center',

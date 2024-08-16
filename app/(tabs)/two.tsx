@@ -5,11 +5,13 @@ import { getTextFromImage } from './openAI';
 import DocumentScanner from 'react-native-document-scanner-plugin';
 import * as SecureStore from 'expo-secure-store';
 import { manipulateAsync, FlipType, SaveFormat } from 'expo-image-manipulator';
+import { SQLiteProvider, useSQLiteContext, type SQLiteDatabase } from 'expo-sqlite';
+import React from 'react';
 export default function ImagePickerExample() {
   const [image, setImage] = useState();
   const [testo, setTesto] = useState("loading");
   const [scannedImage, setScannedImage] = useState();
-
+  
   const scanDocument = async () => {
     // start the document scanner
     const { scannedImages } = await DocumentScanner.scanDocument({
@@ -31,25 +33,31 @@ export default function ImagePickerExample() {
     console.log(resp);
   }
 
-  const pickImage = () => {
+  const pickImage = async () => {
     // No permissions request is necessary for launching the image library
-    ImagePicker.openPicker({
-      width: 700,
-      height: 450,
-      cropping: true,
-      freeStyleCropEnabled: true,
-      loadingLabelText: 'Loading...'
-    }).then(images => {
-      setScannedImage(images.path);
-    })
+    // ImagePicker.openPicker({
+    //   width: 700,
+    //   height: 450,
+    //   cropping: true,
+    //   freeStyleCropEnabled: true,
+    //   loadingLabelText: 'Loading...'
+    // }).then(images => {
+    //   setScannedImage(images.path);
+    // })
+    console.log("starting");
+    const db = useSQLiteContext();
+    const firstRow = await db.getAllAsync('SELECT * FROM documents_base64');
+    console.log(firstRow);
   };
 
   return (
+    <SQLiteProvider databaseName="test.db" >
     <View style={styles.container}>
-      <Button title="Pick an image from camera roll" onPress={pickImage} />
+      <Button title="Pick an image from camera roll" onPress={() => pickImage()} />
       {<Image source={{ uri: scannedImage }} style={styles.image} />}
       <Text>{testo}</Text>
     </View>
+    </SQLiteProvider>
   );
 }
 

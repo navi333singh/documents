@@ -126,7 +126,7 @@ const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
                 <View style={{ flex: 1, justifyContent: 'flex-end', maxHeight: '65%' }}>
                     <TouchableOpacity style={[styles.cardButton, { alignSelf: 'center' }]} onPress={() => pickImage(1)}>
 
-                        <BlurView intensity={20} tint="dark" style={styles.blurContainer}>
+                        <BlurView intensity={20} tint="systemThinMaterialDark" style={styles.blurContainer}>
                             {fronteImage ? <Image source={{ uri: fronteImage }} style={{
                                 width: 255,
                                 height: 161,
@@ -135,7 +135,7 @@ const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
                     </TouchableOpacity >
 
                     <TouchableOpacity style={[styles.cardButton, { alignSelf: 'center' }]} onPress={() => pickImage(2)}>
-                        <BlurView intensity={20} tint="dark" style={styles.blurContainer}>
+                        <BlurView intensity={20} tint="systemThinMaterialDark" style={styles.blurContainer}>
                             {retroImage ? <Image source={{ uri: retroImage }} style={{
                                 width: 255,
                                 height: 161,
@@ -165,7 +165,7 @@ const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
                 <View style={{ flex: 1, justifyContent: 'flex-end', maxHeight: '65%' }}>
                     <TouchableOpacity style={[styles.cardButton, { alignSelf: 'center' }]} onPress={() => takeImage(1)}>
 
-                        <BlurView intensity={20} tint="dark" style={styles.blurContainer}>
+                        <BlurView intensity={20} tint="systemThinMaterialDark" style={styles.blurContainer}>
                             {fronteImage ? <Image source={{ uri: fronteImage }} style={{
                                 width: 255,
                                 height: 161,
@@ -174,7 +174,7 @@ const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
                     </TouchableOpacity>
 
                     <TouchableOpacity style={[styles.cardButton, { alignSelf: 'center' }]} onPress={() => takeImage(2)}>
-                        <BlurView intensity={20} tint="dark" style={styles.blurContainer}>
+                        <BlurView intensity={20} tint="systemThinMaterialDark" style={styles.blurContainer}>
                             {retroImage ? <Image source={{ uri: retroImage }} style={{
                                 width: 255,
                                 height: 161,
@@ -198,9 +198,9 @@ const CustomBottomSheetModal = forwardRef<Ref>((props, ref) => {
     const save = async () => {
         const fronteManipResult = await manipulateAsync(fronteImage, [], { base64: true, compress: 1, format: SaveFormat.PNG });
         const retroManipResult = await manipulateAsync(retroImage, [], { base64: true, compress: 1, format: SaveFormat.PNG });
-        await db.runAsync('REPLACE INTO documents_base64 (key, value) VALUES (?, ?)', selectDocument + '-1', fronteManipResult.base64);
-        await db.runAsync('REPLACE INTO documents_base64 (key, value) VALUES (?, ?)', selectDocument + '-2', retroManipResult.base64);
-
+        await db.runAsync('REPLACE INTO documents_base64 (key, value) VALUES (?, ?)', selectDocument + '-' + props.user + '-1', fronteManipResult.base64);
+        await db.runAsync('REPLACE INTO documents_base64 (key, value) VALUES (?, ?)', selectDocument + '-' + props.user + '-2', retroManipResult.base64);
+        
         const result: any = await TextRecognition.recognize(fronteManipResult.uri);
         const resultRetro: any = await TextRecognition.recognize(retroManipResult.uri);
         console.log(result);
@@ -481,7 +481,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingVertical: 14,
         marginHorizontal: 15,
-        borderRadius: 14,
+        borderRadius: 15,
         elevation: 3,
         backgroundColor: Colors['light'].tint,
     },
@@ -527,7 +527,7 @@ const styles = StyleSheet.create({
         height: 151,
         width: 255,
         overflow: 'hidden',
-        borderRadius: 5,
+        borderRadius: 15,
 
     },
 });

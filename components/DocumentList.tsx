@@ -1,30 +1,36 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Card, Chip } from 'react-native-paper';
 import { Text, View } from '@/components/Themed';
-import { ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, Alert, Linking } from 'react-native';
 import namespace from '@/app/translations/namespace.js'
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import CustomBottomSheetModal from '@/components/CustomBottomSheetModal';
 import { Feather, Entypo } from '@expo/vector-icons';
-import { SQLiteProvider, type SQLiteDatabase } from 'expo-sqlite';
+import { SQLiteProvider,useSQLiteContext, type SQLiteDatabase } from 'expo-sqlite';
 import * as SecureStore from 'expo-secure-store';
-import { Image } from 'expo-image';
 import { DocumentCard } from './DocumentCard';
+import * as Haptics from 'expo-haptics';
+import * as Print from 'expo-print';
+import { Image } from 'expo-image';
 
 export function DocumentList() {
     const bottomSheetRef = useRef<BottomSheetModal>(null);
     const handlePresentModalPress = () => bottomSheetRef.current?.present();
     const [profile, setProfile] = useState(Array<string>);
     const [available, setAvailable] = useState(Array<boolean>);
+    const [removeValue, setRemoveValue] = useState(false);
     const scrollViewRef = useRef<ScrollView>(null);
+    const [image, setImage] = useState();
 
+    const db = useSQLiteContext();
     useEffect(() => {
+        setRemoveValue(true);
         const fetchData = () => {
             const resp = SecureStore.getItem('profile') || '["Me"]';
             return JSON.parse(resp);
         }
         setProfile(fetchData());
-        checkDocuments('Me');
+        
     }, []);
 
     const onlyLettersAndNumbers = (str: string): boolean => {
@@ -32,6 +38,22 @@ export function DocumentList() {
     }
 
     const addChips = async (title: string, subtitle: string) => {
+//           const html = `
+// <html>
+//   <head>
+//     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+//   </head>
+//   <body style="text-align: center;">
+//     <h1 style="font-size: 50px; font-family: Helvetica Neue; font-weight: normal;">
+//       Hello Expo!
+//     </h1>
+//     <img
+//       src="https://d30j33t1r58ioz.cloudfront.net/static/guides/sdk.png"
+//       style="width: 90vw;" />
+//   </body>
+// </html>
+// `;
+// const { uri } = await Print.printToFileAsync({ html });
         Alert.prompt(title, subtitle, [
             {
                 text: 'Aggiungi',
@@ -57,13 +79,44 @@ export function DocumentList() {
         ]);
     }
 
+    const removeChips = async (title: string, index: number, val: String) => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+        Alert.alert(title, '', [
+            {
+                text: 'Rimuovi',
+                onPress: async () => {
+                    if(val!='Me'){
+                        let value = profile.splice(index, 1)[0];
+                        setProfile([...profile]);
+                        setRemoveValue(true);
+                        await SecureStore.setItemAsync('profile', JSON.stringify([...profile]));
+                        console.log(value);
+                        deleteAllDocuments(value);
+                    }
+                }
+            },
+            {
+                text: 'annulla',
+                style: 'cancel',
+                onPress: () => console.log('Cancel Pressed'),
+            }
+        ]);
+    }
+
     const selectChips = async (index: number) => {
-        //SecureStore.deleteItemAsync('profile');
         let value = profile.splice(index, 1)[0];
         setProfile([value, ...profile]);
         await SecureStore.setItemAsync('profile', JSON.stringify([value, ...profile]));
         await checkDocuments(value);
         scrollViewRef.current?.scrollTo({ x: 0, animated: true });
+        //SecureStore.deleteItemAsync('profile');
+    }
+
+    const deleteAllDocuments = async (value: string) => {
+        await SecureStore.deleteItemAsync('ID-' + value);
+        await SecureStore.deleteItemAsync('TS-' + value);
+        await SecureStore.deleteItemAsync('PAT-' + value);
+        await SecureStore.deleteItemAsync('PP-' + value);
     }
 
     const checkDocuments = async (value: string) => {
@@ -76,23 +129,13 @@ export function DocumentList() {
 
     return (
         <>
-            <SQLiteProvider databaseName="test.db" onInit={migrateDbIfNeeded} >
-                {profile.length < 2 ?
-                    (<View style={styles.image}>
-                        <Text style={{ fontSize: 12, fontFamily: 'ManropeBold', right: 50 }}>Aggiungi una persona</Text>
-                        <Image style={{
-                            width: 90,
-                            height: 30,
-                        }}
-                            source={require('../assets/images/arrow.svg')}
-                        /></View>) : ''}
-                <CustomBottomSheetModal ref={bottomSheetRef} user={profile[0]} />
-                <View style={styles.scrollView}>
-                    <ScrollView horizontal={true} onContentSizeChange={(w, h) => scrollViewRef.current?.scrollTo({ x: w, animated: true })} showsHorizontalScrollIndicator={false} ref={scrollViewRef}  >
-                        <Chip disabled={false} style={[styles.chips, { backgroundColor: '#dfccfc' }]} id='0' onPress={() => console.log('Pressed')}><Text>{profile[0]}</Text></Chip>
+            <CustomBottomSheetModal ref={bottomSheetRef} user={profile[0]} />
+            <View style={styles.scrollView}>
+                    <ScrollView horizontal={true} onContentSizeChange={(w, h) => {removeValue ? setRemoveValue(false) : scrollViewRef.current?.scrollTo({ x: w, animated: true })}} showsHorizontalScrollIndicator={false} ref={scrollViewRef}  >
+                        <Chip disabled={false} style={[styles.chips, { backgroundColor: '#dfccfc' }]} key={0}><Text>{profile[0]}</Text></Chip>
                         {profile.map((value, index) => {
                             if (index != 0) {
-                                return <Chip disabled={false} style={styles.chips} id={index.toString()} onPress={() => selectChips(index)}><Text>{value}</Text></Chip>
+                                return <Chip disabled={false} style={styles.chips} key={index}  onLongPress={() => removeChips('Rimuovi persona', index, value)} delayLongPress={500} onPress={() => selectChips(index)}><Text>{value}</Text></Chip>
                             }
                         })}
                     </ScrollView>
@@ -103,19 +146,20 @@ export function DocumentList() {
                         marginRight: 5,
                         marginLeft: 0,
                     }}></View> : ''}
-                    <Chip disabled={false} style={[styles.chips, { backgroundColor: '#ECECEC' }]} onPress={() => addChips('Aggiungi persona', 'Inserisci come vuoi salvare la persona')}><Entypo name="plus" size={20} color="black" /></Chip>
+                    <Chip disabled={false} style={[styles.chips, { backgroundColor: '#ECECEC' }]} onPress={() => addChips('Aggiungi persona', 'Inserisci il nome ')}><Entypo name="plus" size={20} color="black" /></Chip>
                 </View>
+                {/* <Image style={{width: 300, height: 200}} source={{uri: image}}/> */}
                 {available[0] || available[1] || available[2] || available[3] ? (<Card style={[styles.list, { marginBottom: 0 }]} mode='contained'>
-                    <DocumentCard title={namespace.t('ID')} subtitle='18/04/2024' id='ID' user={profile[0]} disable={available[0]} firstFist={false} />
-                    <DocumentCard title={namespace.t('TS')} subtitle='18/04/2024' id='TS' user={profile[0]} disable={available[1]} firstFist={false} />
-                    <DocumentCard title={namespace.t('PAT')} subtitle='18/04/2024' id='PATENTE' user={profile[0]} disable={available[2]} firstFist={false} />
-                    <DocumentCard title={namespace.t('PP')} subtitle='18/04/2024' id='PP' user={profile[0]} disable={available[3]} firstFist={false} />
+                    <DocumentCard title={namespace.t('ID')} subtitle='18/04/2024' id='ID' key={1} user={profile[0]} disable={available[0]} firstFist={false} />
+                    <DocumentCard title={namespace.t('TS')} subtitle='18/04/2024' id='TS'key={2}  user={profile[0]} disable={available[1]} firstFist={false} />
+                    <DocumentCard title={namespace.t('PAT')} subtitle='18/04/2024' id='PATENTE' key={3}  user={profile[0]} disable={available[2]} firstFist={false} />
+                    <DocumentCard title={namespace.t('PP')} subtitle='18/04/2024' id='PP' key={4} user={profile[0]} disable={available[3]} firstFist={false} />
                 </Card>) : ''}
                 <Card style={[styles.list, { marginTop: 15 }]} mode='contained'>
-                    <DocumentCard title={namespace.t('ID')} subtitle='18/04/2024' id='ID' user={profile[0]} disable={available[0]} firstFist={true} />
-                    <DocumentCard title={namespace.t('TS')} subtitle='18/04/2024' id='TS' user={profile[0]} disable={available[1]} firstFist={true} />
-                    <DocumentCard title={namespace.t('PAT')} subtitle='18/04/2024' id='PATENTE' user={profile[0]} disable={available[2]} firstFist={true} />
-                    <DocumentCard title={namespace.t('PP')} subtitle='18/04/2024' id='PP' user={profile[0]} disable={available[3]} firstFist={true} />
+                    <DocumentCard title={namespace.t('ID')} subtitle='18/04/2024' id='ID' key={5} user={profile[0]} disable={available[0]} firstFist={true} />
+                    <DocumentCard title={namespace.t('TS')} subtitle='18/04/2024' id='TS' key={6} user={profile[0]} disable={available[1]} firstFist={true} />
+                    <DocumentCard title={namespace.t('PAT')} subtitle='18/04/2024' id='PATENTE' key={7} user={profile[0]} disable={available[2]} firstFist={true} />
+                    <DocumentCard title={namespace.t('PP')} subtitle='18/04/2024' id='PP' key={8} user={profile[0]} disable={available[3]} firstFist={true} />
                 </Card>
                 <View style={styles.upload}>
                     <TouchableOpacity onPress={handlePresentModalPress}>
@@ -125,18 +169,11 @@ export function DocumentList() {
                             <Text style={{ fontSize: 14, color: '#A0A0A0', fontFamily: 'ManropeRegular' }}>{namespace.t('UPLOAD_SUBTITLE')}</Text>
                         </Card.Content>
                     </TouchableOpacity>
-                </View >
-            </SQLiteProvider >
+                </View >           
         </>
     );
 }
 
-async function migrateDbIfNeeded(db: SQLiteDatabase) {
-    await db.execAsync(`
-    PRAGMA journal_mode = WAL;
-    CREATE TABLE IF NOT EXISTS documents_base64 ( key TEXT PRIMARY KEY NOT NULL, value TEXT);
-  `);
-}
 const styles = StyleSheet.create({
     container: {
         height: '100%',
