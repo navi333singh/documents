@@ -1,5 +1,5 @@
 {
-  "name": "Documents",
+  "name": "documents",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -18,6 +18,7 @@
     "@expo/vector-icons": "^14.0.0",
     "@gorhom/bottom-sheet": "^4.6.3",
     "@kichiyaki/react-native-barcode-generator": "^0.6.7",
+    "@radix-ui/react-popover": "1.1.1",
     "@react-native-community/image-editor": "^4.2.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-ml-kit/text-recognition": "^1.5.1",
@@ -35,8 +36,10 @@
     "expo-image-picker": "~15.0.5",
     "expo-linking": "~6.3.1",
     "expo-localization": "~15.0.3",
+    "expo-print": "~13.0.1",
     "expo-router": "~3.5.15",
     "expo-secure-store": "~13.0.1",
+    "expo-sharing": "~12.0.1",
     "expo-splash-screen": "~0.27.5",
     "expo-sqlite": "~14.0.3",
     "expo-status-bar": "~1.12.1",
@@ -57,15 +60,14 @@
     "react-native-safe-area-context": "4.10.1",
     "react-native-screens": "^3.31.1",
     "react-native-svg": "15.2.0",
-    "react-native-web": "~0.19.6",
-    "expo-print": "~13.0.1",
-    "expo-sharing": "~12.0.1"
+    "react-native-web": "~0.19.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/react": "~18.2.45",
     "jest": "^29.2.1",
     "jest-expo": "~51.0.2",
+    "prettier": "3.3.3",
     "react-test-renderer": "18.2.0",
     "typescript": "~5.3.3"
   },
