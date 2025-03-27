@@ -63,7 +63,3 @@ Contributi sono benvenuti! Se desideri contribuire, per favore segui questi pass
 ## Licenza
 
 Questo progetto è rilasciato sotto la licenza MIT. Vedi il file LICENSE per maggiori dettagli.
-
----
-
-Se hai bisogno di ulteriori modifiche o aggiunte, fammelo sapere!
